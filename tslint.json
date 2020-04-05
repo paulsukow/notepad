@@ -4,6 +4,10 @@
     "codelyzer"
   ],
   "rules": {
+    "semicolon": [
+      true,
+      "never"
+    ],
     "array-type": false,
     "arrow-parens": false,
     "deprecation": {
@@ -60,7 +64,7 @@
       true,
       "single"
     ],
-    "trailing-comma": false,
+    "trailing-comma": true,
     "no-output-on-prefix": true,
     "no-inputs-metadata-property": true,
     "no-host-metadata-property": true,
