@@ -1,54 +1,45 @@
 import { Injectable } from '@angular/core'
-import { Note } from '../interfaces/note'
 import { Storage } from '@ionic/storage'
+import { Store } from '@ngrx/store'
+
+import { Observable } from 'rxjs'
+import * as NoteActions from '../actions/note.actions'
+
+import { Note } from '../interfaces/note'
+import { AppState, getAllNotes, getNoteById } from '../reducers'
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotesService {
 
-  public notes: Note[] = []
-  public loaded = false
+  public notes: Observable<Note[]>
 
-  constructor(private storage: Storage) { }
+  constructor(private storage: Storage, private store: Store<AppState>) {
+    this.notes = this.store.select(getAllNotes)
+  }
 
-  load(): Promise<boolean> {
-    return new Promise((resolve) => {
-      this.storage.get('notes').then((notes) => {
-        if (notes != null) {
-          this.notes = notes
-        }
-
-        this.loaded = true
-        resolve(true)
-      })
+  getNote(id: string): Observable<Note> {
+    return this.store.select(getNoteById, {
+      id
     })
   }
 
-  save(): void {
-    this.storage.set('notes', this.notes)
-  }
+  createNote(title): void {
+    const id = Math.random()
+      .toString(36)
+      .substring(7)
 
-  getNote(id): Note {
-    return this.notes.find(note => note.id === id)
-  }
-
-  createNote(noteTitle): void {
-    // tslint:disable-next-line:radix
-    const id = Math.max(...this.notes.map(note => parseInt(note.id)), 0) + 1
-    this.notes.push({
+    const note = {
       id: id.toString(),
-      title: noteTitle,
+      title,
       content: ''
-    })
-    this.save()
+    }
+
+    this.store.dispatch(new NoteActions.CreateNote({ note }))
   }
 
   deleteNote(note): void {
-    const index = this.notes.indexOf(note)
-    if (index > -1) {
-      this.notes.splice(index, 1)
-      this.save()
-    }
+    this.store.dispatch(new NoteActions.DeleteNote({ note }))
   }
 }

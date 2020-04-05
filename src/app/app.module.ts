@@ -9,11 +9,25 @@ import { IonicStorageModule } from '@ionic/storage'
 import { AppRoutingModule } from './app-routing.module'
 
 import { AppComponent } from './app.component'
+import { StoreModule } from '@ngrx/store'
+import { reducers, metaReducers } from './reducers'
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, IonicStorageModule.forRoot()],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    IonicStorageModule.forRoot(),
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true
+      }
+    })
+  ],
   providers: [
     StatusBar,
     SplashScreen,

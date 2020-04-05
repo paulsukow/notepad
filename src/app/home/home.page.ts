@@ -15,7 +15,7 @@ export class HomePage implements OnInit {
     private navCtrl: NavController) {}
 
   ngOnInit(): void {
-    this.notesService.load()
+    // this.notesService.load()
   }
 
   addNote() {

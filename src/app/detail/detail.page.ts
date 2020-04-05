@@ -24,15 +24,13 @@ export class DetailPage implements OnInit {
   ngOnInit() {
     const noteId = this.route.snapshot.paramMap.get('id')
 
-    if (this.notesService.loaded) {
-      this.note = this.notesService.getNote(noteId)
-    } else {
-      this.notesService.load().then(() => this.note = this.notesService.getNote(noteId))
-    }
+    this.notesService.getNote(noteId).subscribe(note => {
+      this.note = note
+    })
   }
 
   noteChanged() {
-    this.notesService.save()
+    // this.notesService.save()
   }
 
   deleteNote() {
